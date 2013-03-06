@@ -1,9 +1,6 @@
-import urllib2
-import sys
-import re
-import time
-
 '''
+Created on Mar 2, 2013
+
 Created on Mar 2, 2013
 @descr:  little script that finds subdomains of a domain specified
          as a command line argument
@@ -14,25 +11,32 @@ It doesn't work amazingly. It works okay. I had the idea that this might work...
 but I think it needs more work. It will only find subdomains that have been indexed by 
 search engines
 '''
-
+import urllib2
+import sys
+import re
+import time
 def curldom(domain):
     foundsubdomains = []
     num = 1
 
     while True:
-        d = urllib2.urlopen("http://www.bing.com/search?q=site%3A" + domain + "&first=" + str(num)).read()
-        links =  d.split("<a href=")
-        for i in links:
-            if "."+domain in i:
-                pagematches = i.split('"')
-                possiblesubdomain = pagematches[1:2:][0].split("." + domain+ "/")[0]
-                if possiblesubdomain not in foundsubdomains:
-                    print possiblesubdomain
-                    foundsubdomains.append(possiblesubdomain)
-                    
-        #don't go too fast, or bing will force you to pass a reverse turing test
-        time.sleep(1)
-        num+=10
+        try:
+            d = urllib2.urlopen("http://www.bing.com/search?q=site%3A" + domain + "&first=" + str(num)).read()
+            links =  d.split("<a href=")
+            for i in links:
+                if "."+domain in i:
+                    pagematches = i.split('"')
+                    possiblesubdomain = pagematches[1:2:][0].split("." + domain+ "/")[0]
+                    if possiblesubdomain not in foundsubdomains:
+                        print possiblesubdomain
+                        foundsubdomains.append(possiblesubdomain)
+                        
+            #don't go too fast, or bing will force you to pass a reverse turing test
+            time.sleep(1.5)
+            num+=10
+        except :
+            print "\tException caught....I'll try again"
+            num-=10
 
     
 if __name__ == '__main__':
