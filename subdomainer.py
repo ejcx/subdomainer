@@ -1,3 +1,8 @@
+import urllib2
+import sys
+import re
+import time
+
 '''
 Created on Mar 2, 2013
 
@@ -11,10 +16,9 @@ It doesn't work amazingly. It works okay. I had the idea that this might work...
 but I think it needs more work. It will only find subdomains that have been indexed by 
 search engines
 '''
-import urllib2
-import sys
-import re
-import time
+
+
+
 def curldom(domain):
     foundsubdomains = []
     num = 1
