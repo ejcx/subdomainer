@@ -8,6 +8,11 @@ Created on Mar 2, 2013
 @descr:  little script that finds subdomains of a domain specified
          as a command line argument
 @author: Evan J Johnson
+
+@bugs:
+It doesn't work amazingly. It works okay. I had the idea that this might work...
+but I think it needs more work. It will only find subdomains that have been indexed by 
+search engines
 '''
 
 def curldom(domain):
