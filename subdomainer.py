@@ -18,29 +18,25 @@ search engines
 '''
 
 
-
 def curldom(domain):
     foundsubdomains = []
     num = 1
 
     while True:
-        try:
-            d = urllib2.urlopen("http://www.bing.com/search?q=site%3A" + domain + "&first=" + str(num)).read()
-            links =  d.split("<a href=")
-            for i in links:
-                if "."+domain in i:
-                    pagematches = i.split('"')
-                    possiblesubdomain = pagematches[1:2:][0].split("." + domain+ "/")[0]
-                    if possiblesubdomain not in foundsubdomains:
-                        print possiblesubdomain
-                        foundsubdomains.append(possiblesubdomain)
-                        
-            #don't go too fast, or bing will force you to pass a reverse turing test
-            time.sleep(1.5)
-            num+=10
-        except :
-            print "\tException caught....I'll try again"
-            num-=10
+        d = urllib2.urlopen("http://www.bing.com/search?q=site%3A" + domain + "&first=" + str(num)).read()
+        links =  d.split("<a href=")
+        for i in links:
+            if "."+domain in i:
+                pagematches = i.split('"')
+                possiblesubdomain = pagematches[1:2:][0].split("." + domain+ "/")[0]
+                if possiblesubdomain not in foundsubdomains:
+                    print possiblesubdomain
+                    foundsubdomains.append(possiblesubdomain)
+                    
+        #don't go too fast, or bing will force you to pass a reverse turing test
+        time.sleep(2)
+        num+=10
+
 
     
 if __name__ == '__main__':
