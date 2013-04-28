@@ -1,8 +1,9 @@
+
 import urllib2
 import sys
 import re
 import time
-
+import httplib
 '''
 Created on Mar 2, 2013
 
@@ -23,22 +24,25 @@ def curldom(domain):
     num = 1
 
     while True:
-        d = urllib2.urlopen("http://www.bing.com/search?q=site%3A" + domain + "&first=" + str(num)).read()
-        links =  d.split("<a href=")
-        for i in links:
-            if "."+domain in i:
-                pagematches = i.split('"')
-                possiblesubdomain = pagematches[1:2:][0].split("." + domain+ "/")[0]
-                if possiblesubdomain not in foundsubdomains:
-                    print possiblesubdomain
-                    foundsubdomains.append(possiblesubdomain)
-                    
-        #don't go too fast, or bing will force you to pass a reverse turing test
-        time.sleep(2)
-        num+=10
+        try:
+                d = urllib2.urlopen("http://www.bing.com/search?q=site%3A" + domain + "&first=" + str(num)).read()
+                links =  d.split("<a href=")
+                for i in links:
+                    if "."+domain in i:
+                        pagematches = i.split('"')
+                        possiblesubdomain = pagematches[1:2:][0].split("." + domain+ "/")[0]
+                        if possiblesubdomain not in foundsubdomains:
+                            print possiblesubdomain
+                            foundsubdomains.append(possiblesubdomain)
+
+                #don't go too fast, or bing will force you to pass a reverse turing test
+                time.sleep(2)
+                num+=10
+        except httplib.IncompleteRead:
+                print "Incomplete Read. Let me Try again"
+                num-=10
 
 
-    
 if __name__ == '__main__':
     try:
         domain = sys.argv[1]
@@ -49,7 +53,5 @@ if __name__ == '__main__':
         print "Example:"
         print "\tpython subdomainer.py google.com"
         print "\tpython subdomainer.py example.com"
-        
-        
-    
-    
+
+
